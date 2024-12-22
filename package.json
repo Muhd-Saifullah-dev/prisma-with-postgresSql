@@ -1,0 +1,19 @@
+{
+  "name": "prisma-with-postgressql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "node_env=dev && nodemon server.js",
+    "start:prod": "node_env=production && node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-req-res-inspector": "^3.0.2"
+  }
+}

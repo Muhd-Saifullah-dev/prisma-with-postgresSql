@@ -1,4 +1,4 @@
-const {handleError}=require("../utils/handlers.util")
+const {handleError}=require("../utils/handler.utils")
 
 const globaleErrorMiddleware =  (error,req,res,next) => {
   const message = error.message ?? "Something went wrong";

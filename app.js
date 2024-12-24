@@ -1,6 +1,6 @@
 const reqResInspector=require("express-req-res-inspector")
 const {globaleErrorMiddleware }=require("./middleware/globalError.middleware")
-
+const rootRouter=require("./routes/index")
 const express=require("express")
 const app=express()
 
@@ -18,6 +18,8 @@ app.get("/api/v1/health-check",(req,res,next)=>{
         message:"Server is running"
     });
 })
+
+app.use("/api/v1",rootRouter)
 
 app.use(globaleErrorMiddleware)
 

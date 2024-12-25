@@ -1,0 +1,8 @@
+
+// model Book{
+//     id  Int  @id @default(autoincrement())
+//     title String  @db.VarChar(30)
+//     description String 
+//     bookImage String 
+
+// }

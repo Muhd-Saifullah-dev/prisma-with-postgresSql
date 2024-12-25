@@ -1,8 +1,15 @@
 model User {
-    id        Int      @id @default(autoincrement()) // Primary key with auto increment
-    email     String   @unique // Unique email
-    name      String? // Optional name
-    password  String? // Optional password
-    createdAt DateTime @default(now()) // Automatically set the current time
-   
+  id           Int      @id @default(autoincrement()) // Primary key with auto increment
+  email        String   @unique // Unique email
+  name         String?  @db.VarChar() // Optional name
+  password     String? // Optional password
+  profileImage String?
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now()) // Automatically set the current time
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
 }

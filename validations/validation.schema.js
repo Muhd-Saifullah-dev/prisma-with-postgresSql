@@ -1,15 +1,47 @@
-const {  vine } = require("@vinejs/vine")
+const Joi = require('joi');
 
 
 
- const validationSchema=vine.object({
-            name:vine.string({message:"name is required"}).minLength(4,{message:"name is length at least 4 character "}).maxLength(120,{
-                message:"maximum length is 120 character "
+ const validationSchema=Joi.object({
+            name:Joi.string().required().min(4).max(120)
+            .messages({
+                "string.base":"Name must be string",
+                'string.empty':"Name cannot be empty",
+                "string.min":"Name must be at least 4 character",
+                "string.max":"Name maximum length is 120 character",
+                "any.required":"Name is required"
             }),
-            email:vine.string({message:"email is required"}).email({message:"this is not email"}).minLength(8,{message:"email at least 8 character"}),
-            password:vine.string({message:"password is required"}).minLength(8,{message:"password must be at leasat 8 character"})
+            email:Joi.string().required().email().min(6)
+            .messages({
+                "string.base":"email must be string",
+                "string.empty":"email cannot be empty",
+                "string.min":"email must be at least 6 character",
+                "string.email":"email must be a valid email address ",
+                "any.required":"email is required"
+            }),
+            password:Joi.string().required().min(8)
+            .messages({
+                'string.base': 'Password must be a string',
+        'string.empty': 'Password cannot be empty',
+        'string.min': 'Password should have a minimum length of 8 characters',
+        'any.required': 'Password is required',
+            })
             
         })
-   
-        module.exports=validationSchema
+        
+        const LoginvalidationSchema=Joi.object({
+            email:Joi.string().required().email()
+            .messages({
+                "any.required":"email is required",
+                "string.email":"email must be a valid email address",
+
+            }),
+            password:Joi.string().required()
+            .messages({
+                "any.required":"password is required"
+            })
+        })
+
+
+        module.exports={validationSchema,LoginvalidationSchema}
  

@@ -5,5 +5,9 @@ require("dotenv").config({
 
 module.exports={
     PORT:process.env.PORT,
-    DATABASE_URL:process.env.DATABASE_URL
+    TOKEN_SECRET_KEY:process.env.TOKEN_SECRET_KEY,
+    TOKEN_EXPIRY:process.env.TOKEN_EXPIRY,
+    CLOUD_NAME:process.env.CLOUD_NAME,
+    CLOUD_API:process.env.CLOUD_API,
+    CLOUD_SECRET:process.env.CLOUD_SECRET
 }

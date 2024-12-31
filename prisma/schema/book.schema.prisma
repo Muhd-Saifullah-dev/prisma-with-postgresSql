@@ -1,8 +1,12 @@
 
-// model Book{
-//     id  Int  @id @default(autoincrement())
-//     title String  @db.VarChar(30)
-//     description String 
-//     bookImage String 
+model Book{
+    id  Int  @id  @default(autoincrement())
+    title String  @db.VarChar(40)
+    price Decimal @db.Decimal(10,2) 
+    description String 
+    bookImage String  
+    stock Int @default(1)
+    createdAt    DateTime @default(now()) // Automatically set the current time
+    updatedAt    DateTime @updatedAt
 
-// }
+}

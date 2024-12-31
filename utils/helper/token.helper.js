@@ -4,7 +4,7 @@ const {TOKEN_EXPIRY,TOKEN_SECRET_KEY }=require("../../configs/config")
 
 function AssignToken (user) {
 return JWT.sign({
-    id: user._id,
+    id: user.id,
     name:user.name,
     email:user.email,
     role:user.role

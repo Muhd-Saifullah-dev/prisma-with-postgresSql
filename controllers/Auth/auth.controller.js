@@ -1,8 +1,8 @@
-const prisma=require("../configs/prisma.client.config")
-const {BadRequestError }=require("../customErrors")
-const {okResponse }=require("../utils/handler.utils")
-const cloudinary=require("../configs/cloudinary.config")
-const HelperFunction=require("../utils/helper/index")
+const prisma=require("../../configs/prisma.client.config")
+const {BadRequestError }=require("../../customErrors")
+const {okResponse }=require("../../utils/handler.utils")
+const cloudinary=require("../../configs/cloudinary.config")
+const HelperFunction=require("../../utils/helper/index")
 
 const Signup=async(req,res,next)=>{
     try {
@@ -73,7 +73,27 @@ const loginUser=async(req,res,next)=>{
         next(error)
     }
 }
+
+const updateInformationUser=async(req,res,next)=>{
+    const {name}=req.body
+    const userId=req.user?.id
+    let changeInformationExistingUser= await prisma.user.findUnique({
+        where:{
+            id:parseInt(userId)
+        },
+        data:{
+            name:name
+        }
+    })
+
+    if(!changeInformationExistingUser){
+        throw new BadRequestError("user is not found please login again ")
+    }
+    okResponse(res,200,"user information update successfully",changeInformationExistingUser)
+
+}
 module.exports={
     Signup,
-    loginUser
+    loginUser,
+    updateInformationUser
 }

@@ -1,5 +1,5 @@
 model User {
-  id           Int      @id @default(autoincrement()) // Primary key with auto increment
+  id           Int      @id  @default(autoincrement()) // Primary key with auto increment
   email        String   @unique // Unique email
   name         String?  @db.VarChar() // Optional name
   password     String? // Optional password

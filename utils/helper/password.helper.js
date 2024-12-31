@@ -10,7 +10,7 @@ function Hashpassword(userPassword){
 
 
 function isPasswordCorrect(password,userPassword){
-    return bcrypt.compare(password,userPassword)
+    return bcrypt.compareSync(password,userPassword)
 }
 
 module.exports={Hashpassword,isPasswordCorrect}

@@ -12,19 +12,37 @@ const updateInformationUser=async(req,res,next)=>{
         const {name}=req.body
         const userId=req.user?.id
         
-        let changeInformationExistingUser= await prisma.user.update({
+        let changeInformationExistingUser= await prisma.user.findUnique({
+            where:{
+                id:parseInt(userId),
+               
+            },
+            
+        })
+        
+        if(!changeInformationExistingUser){
+            throw new BadRequestError("user is not found please login again ")
+        }
+        const nameTaken=await prisma.user.findFirst({
+            where:{
+                name:name
+            }
+        })
+        console.log("NAME TAKEN ERRRORRR :: ",nameTaken)
+        
+        if(nameTaken){
+            throw new BadRequestError("name is already taken ")
+        }
+        const updateUser=await prisma.user.update({
             where:{
                 id:parseInt(userId)
             },
             data:{
-                name:name
+                name
             }
         })
-    
-        if(!changeInformationExistingUser){
-            throw new BadRequestError("user is not found please login again ")
-        }
-        okResponse(res,200,"user information update successfully",changeInformationExistingUser)
+
+        okResponse(res,200,"user information update successfully",updateUser)
     } catch (error) {
             console.log("ERROR IN CHANGE NAME :: ",error)
             next(error)
@@ -91,7 +109,7 @@ const changePassword=async(req,res,next)=>{
      }
      const matchPassword=await HelperFunction.isPasswordCorrect(currentPassword,user.password)
      if(!matchPassword){
-         throw new BadRequestError("password is incorrect")
+         throw new BadRequestError(" current password is incorrect")
      }
  
      const newHashPassword=await HelperFunction.Hashpassword(newPassword)

@@ -9,4 +9,6 @@ model Book{
     createdAt    DateTime @default(now()) // Automatically set the current time
     updatedAt    DateTime @updatedAt
 
+
+    Order Order[]
 }

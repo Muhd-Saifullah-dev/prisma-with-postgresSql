@@ -44,6 +44,9 @@ const usernameSchema = Joi.object({
 });
 
 const changePasswordSchema = Joi.object({
+  currentPassword:Joi.required().messages({
+    "any.required":"current Password is required"
+  }),
   newPassword: Joi.string().required().min(8).max(100).messages({
     "string.base": "newPassword must be string",
     "stirng.min": "newPassword at least contain 8 character",
@@ -52,7 +55,7 @@ const changePasswordSchema = Joi.object({
   }),
   confirmPassword: Joi.valid(Joi.ref("newPassword")).required().messages({
     "any.required": "confirmPassword is required",
-    "only.validate": "confirm password must be match newPassword",
+    "any.only": "confirm password must match newPassword",
   }),
 });
 

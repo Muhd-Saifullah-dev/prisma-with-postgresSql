@@ -59,8 +59,8 @@ const loginUser=async(req,res,next)=>{
         if(!user){
             throw new BadRequestError("this email is not exist")
     }
-    const MatchPassword=await HelperFunction.isPasswordCorrect(password,user.password)
-
+    const MatchPassword= HelperFunction.isPasswordCorrect(password,user.password)
+    console.log("PASSWORD CORRECTION IN DATABASE :: ",MatchPassword)
 
     if(!MatchPassword){
         throw new BadRequestError("Invalid credientials")
@@ -74,26 +74,9 @@ const loginUser=async(req,res,next)=>{
     }
 }
 
-const updateInformationUser=async(req,res,next)=>{
-    const {name}=req.body
-    const userId=req.user?.id
-    let changeInformationExistingUser= await prisma.user.findUnique({
-        where:{
-            id:parseInt(userId)
-        },
-        data:{
-            name:name
-        }
-    })
 
-    if(!changeInformationExistingUser){
-        throw new BadRequestError("user is not found please login again ")
-    }
-    okResponse(res,200,"user information update successfully",changeInformationExistingUser)
-
-}
 module.exports={
     Signup,
-    loginUser,
-    updateInformationUser
+    loginUser
+   
 }

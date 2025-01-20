@@ -2,11 +2,12 @@ const prisma = require("../../configs/prisma.client.config");
 const { BadRequestError, ValidationError } = require("../../customErrors");
 const cloudinary=require("../../configs/cloudinary.config");
 const { okResponse } = require("../../utils/handler.utils");
+const { deleteCloudinaryImage } = require("../../utils/deleteImage.utils");
 
 const addBook=async(req,res,next)=>{
  try {
     const {title,price,description,stock}=req.body;
-    let exitingBook=await prisma.book.findUnique({
+    let exitingBook=await prisma.book.findFirst({
        where:{
            title,
        }
@@ -18,19 +19,25 @@ const addBook=async(req,res,next)=>{
        if(!req.file){
            throw new ValidationError("Image is required then we will further procceed")
        }
-   
+       
        let uploadImage=await new Promise((resolve,reject)=>{
-           cloudinary.upload.uploader_stream({folder:"BookImages"},(error,result)=>{
-               if(error) reject(error)
-                   else resolve(result)
-           }).end(req.file.buffer)
+        cloudinary.uploader.upload_stream(
+            { folder: "BookImages" },
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            }
+        ).end(req.file.buffer);
        })
     const newBook=await prisma.book.create({
-       title,
-       price: new prisma.decimal(price),
-       stock,
-       description,
-       bookImage:uploadImage.secure_url
+        data:{
+            title,
+            price:parseInt(price),
+            stock:parseInt(stock),
+            description,
+            bookImage:uploadImage.secure_url
+        }
+      
     })
     okResponse(res,201,"new Book added Successfully!!",newBook)
  } catch (error) {
@@ -41,8 +48,8 @@ const addBook=async(req,res,next)=>{
 
 const updateBook=async(req,res,next)=>{
  try {
-       const {title,description,stock}=req.body;
-       const bookId=req.params.id
+       const {title,description,stock,price}=req.body;
+       const {bookId}=req.params
    
        let exitingBook=await prisma.book.findUnique({
            where:{
@@ -52,7 +59,17 @@ const updateBook=async(req,res,next)=>{
        if(!exitingBook){
            throw new BadRequestError("Book is not found please try again later")
        }
-   
+       let uploadImage=null
+       if(req.file){
+        uploadImage=new Promise((resolve,reject)=>{
+        cloudinary.uploader.upload_stream({folder:"BookImage"},(error,result)=>{
+            if(error) reject(error)
+                else resolve(result)
+        }).end(req.file.buffer)
+       })     
+
+        await deleteCloudinaryImage(exitingBook.bookImage)
+       }
        let UpdatedBook=await prisma.book.update({
            where:{
                id:parseInt(bookId)
@@ -60,8 +77,9 @@ const updateBook=async(req,res,next)=>{
            data:{
                title:title || exitingBook.title,
                description:description || exitingBook.description,
-               stock:stock !==undefined ? stock : exitingBook.stock
-   
+               stock:stock !==undefined ? stock : exitingBook.stock,
+                price:price || exitingBook.price,
+                bookImage:uploadImage?uploadImage.secure_url : exitingBook.bookImage
            }
        })
    
@@ -77,10 +95,10 @@ const updateBook=async(req,res,next)=>{
 
 const deleteBook=async(req,res,next)=>{
     try {
-        const {bookId}=req.params.id
+        const {bookId}=req.params
         const deleteThisBook=await prisma.book.delete({
             where:{
-                id:bookId
+                id:parseInt(bookId)
             }
         })
         if(!deleteThisBook){

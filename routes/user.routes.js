@@ -9,5 +9,5 @@ userRouter.post("/signup",signupvalidation,Signup)
 userRouter.post("/login",Loginvalidation,loginUser)
 
 userRouter.use("/profile",profileRouter)
-userRouter.use("feature",featureRouter)
+userRouter.use("/feature",featureRouter)
 module.exports=userRouter

@@ -4,7 +4,7 @@ model Order{
     bookId Int
     user  User  @relation(fields: [userId], references:[id])
     books Book  @relation(fields: [bookId], references : [id])
-    totalPrice Decimal @db.Decimal(10,2)
+    totalPrice Int
     quantity Int @default(1)
     status orderStatus @default(PENDING)
     createdAt DateTime @default(now())
